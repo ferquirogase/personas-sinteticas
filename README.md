@@ -2,67 +2,96 @@
 
 ![Panel de Usuarios Sintéticos — Saldoar](cover.svg)
 
-Un sistema de personas simuladas por IA para hacer pruebas de UX, validar copy y priorizar features cuando no hay tiempo o recursos para investigación con usuarios reales.
+Un sistema de personas simuladas por IA para testear hipótesis, validar copy y priorizar features cuando no hay tiempo o recursos para investigación con usuarios reales.
 
 ---
 
 ## Qué es esto
 
-Cuando el equipo necesita saber cómo reaccionaría un usuario a un cambio, un mensaje o un flujo nuevo, normalmente hay dos opciones: esperar a tener usuarios disponibles, o asumir. Este sistema ofrece una tercera opción: consultarle al panel.
+Cuando el equipo necesita saber cómo reaccionaría un usuario a un cambio, un mensaje o un flujo nuevo, normalmente hay dos opciones: esperar a tener usuarios disponibles, o asumir. Este sistema ofrece una tercera: consultarle al panel.
 
-El panel está compuesto por cuatro personas sintéticas que representan los segmentos principales de Saldoar. Cada una tiene su propia voz, sus prioridades y sus miedos. Cuando el equipo hace una consulta, cada persona responde en primera persona — no como analista que describe al usuario, sino como el usuario hablando.
+El panel está compuesto por cinco personas sintéticas que representan los segmentos principales de Saldoar. Cada una tiene su propio worldview, su forma de razonar y sus miedos. Cuando el equipo hace una consulta, cada persona responde en primera persona — no como analista que describe al usuario, sino como el usuario hablando.
 
 **Lo que esto no es:** no reemplaza hablar con usuarios reales. Complementa cuando no hay acceso. Las respuestas son orientativas, no predictivas.
 
 ---
 
-## Cómo funciona
+## Arquitectura
 
-El sistema tiene dos capas:
+El sistema tiene separación estricta entre dos componentes. Esto es lo que lo hace escalable.
 
-### Capa 1 — Datos empíricos (compartida por todas las personas)
+### Personas (`/personas/`) — fuente primaria
 
-Los archivos en `/datos/` contienen lo que los usuarios realmente dijeron: respuestas de NPS, tickets de soporte, resúmenes de entrevistas. Son la evidencia base del panel. Antes de responder cualquier consulta, el modelo revisa estos archivos e identifica los patrones relevantes: fricciones más mencionadas, elogios recurrentes, vocabulario real.
+Cada persona define su **worldview completo**: quién es, qué le importa, qué le da miedo y, fundamentalmente, **cómo razona**. Esta última parte es la clave: con un patrón de razonamiento definido, la persona puede responder a cualquier situación nueva — una feature que no existe todavía, un copy hipotético, un flujo que nunca se probó — sin necesitar que alguien se haya quejado de eso antes.
 
-### Capa 2 — Personas (filtros interpretativos)
+Los perfiles **no cambian cuando llegan datos nuevos**. Son definiciones de worldview, no repositorios de citas.
 
-Cada persona procesa esa evidencia desde sus propias prioridades y miedos. Los mismos datos de NPS los lee Martín con ansiedad por la espera, Carlos con preocupación por la consistencia, y Ana con el peso emocional de lo que le llega a su familia.
+### Datos (`/datos/`) — evidencia que calibra
+
+Los archivos en `/datos/` contienen lo que usuarios reales dijeron: NPS, tickets de soporte, entrevistas, encuestas. Se agregan en cualquier momento sin tocar ningún perfil.
+
+Cuando hay datos relevantes para una consulta, la persona los usa como evidencia que concreta su respuesta. Cuando no hay nada que aplique, la persona responde igual desde su worldview — con la misma validez.
 
 ```
-/datos/nps/ + /datos/soporte/ + /datos/entrevistas/
-              ↓  leer siempre antes de responder
-      patrones reales: quejas, elogios, vocabulario
-              ↓
-    cada persona filtra con su propia lente
-              ↓
-  Martín → ansiedad por la espera
-  Carlos → preocupación por la consistencia
-  Ana    → peso emocional del envío
-  Diego  → criterio técnico sobre spreads
+Consulta del equipo
+        ↓
+Persona lee su perfil → tiene worldview + patrones de razonamiento
+        ↓
+Persona lee /datos/ → busca evidencia relevante (si existe)
+        ↓
+Responde en primera persona, como ese usuario
+
+— — —
+
+Nueva persona creada mañana:
+  → Definís el worldview
+  → Funciona con todos los datos existentes desde el día uno
+
+Nuevos datos cargados mañana:
+  → Se agregan a /datos/
+  → Todas las personas los leen automáticamente
+  → No se toca ningún perfil
 ```
 
-**Cuando no hay datos cargados:** el modelo responde desde el perfil de cada persona y aclara que la respuesta es orientativa, no empírica.
+**Regla de diseño que no se rompe:** los archivos de personas no contienen citas de datos ni referencias a NPS. Eso vive en `/datos/`. La persona tiene fricciones y miedos definidos desde su perfil — si los datos los confirman, los menciona al responder; si no hay datos, responde igual.
 
 ---
 
 ## Las personas del panel
 
-| Persona | Segmento | Volumen | Prioridades |
+| Persona | Segmento | País | Prioridades |
 |---|---|---|---|
-| **Martín / Laura** | Freelancer argentino/a — convierte USD a ARS | 40% | Velocidad, tasa clara, sin sorpresas |
-| **Carlos** | Comerciante boliviano — compra USD para su negocio | 30% | Consistencia, soporte real, sin burocracia |
-| **Ana** | Venezolana en el exterior — envía remesas a su familia | 20% | Certeza de que llega, monto completo, método accesible |
-| **Diego** | Usuario crypto — convierte USDT/BTC a moneda local | 10% | Sin KYC largo, spread transparente, proceso simple |
+| **Martín / Laura** | Freelancer — convierte USD a ARS (PayPal, Wise) | 🇦🇷 Argentina | Velocidad, tasa clara, proceso simple |
+| **Carlos** | Comerciante — compra USD para su negocio | 🇧🇴 Bolivia | Consistencia, predecibilidad, sin sorpresas |
+| **Ana** | Remesas — envía dinero a su familia en Venezuela | 🇻🇪 Venezuela | Certeza de que llega, monto completo, método accesible |
+| **Diego** | Crypto — convierte USDT/BTC a moneda local | 🌐 Todos | Sin KYC largo, spread transparente, proceso simple |
+| **Valentina** | Freelancer — convierte USD a COP (Nequi, Daviplata) | 🇨🇴 Colombia | Claridad del proceso, compatible con Nequi |
 
-Ver `/personas/personas.md` para el índice completo, incluyendo segmentos en lista de espera.
+Ver `/personas/personas.md` para el índice completo, estado de datos por persona y segmentos en lista de espera.
+
+---
+
+## Datos disponibles
+
+El panel está actualmente alimentado con:
+
+| Fuente | Archivo | Contenido |
+|---|---|---|
+| NPS interno | `datos/nps/nps_historico.md` | 40 respuestas con verbatim, sin segmentar por usuario |
+| Trustpilot | `datos/nps/nps_trustpilot_historico.md` | ~25 comentarios públicos |
+| Cancelaciones | `datos/soporte/soporte_cancelaciones.md` | 31 razones de pedidos cancelados |
+| Encuesta | `datos/entrevistas/encuesta_usuarios_2026.md` | Encuesta cuantitativa de usuarios activos y ex-usuarios |
+
+**Pendiente para mejorar la calidad:**
+- Entrevistas cualitativas (3-5 por segmento) — mayor impacto en profundidad
+- NPS segmentado por tipo de usuario — conecta datos con personas específicas
+- Datos directos de Carlos y Diego — actualmente sin verbatims identificados
 
 ---
 
 ## Dos formas de usar este repositorio
 
 ### Opción A — Claude Code (recomendada)
-
-Si tenés Claude Code instalado:
 
 1. Abrir la carpeta `usuarios-sinteticos/` en Claude Code
 2. Escribir la consulta directamente — el sistema responde desde las personas relevantes
@@ -72,30 +101,31 @@ El archivo `CLAUDE.md` configura el comportamiento del orquestador automáticame
 
 ### Opción B — Claude Projects (sin instalación)
 
-Para usar desde [claude.ai](https://claude.ai) sin acceso técnico:
-
 1. Crear un nuevo Project en Claude → `Projects → New Project`
 2. Copiar el contenido de `INSTRUCCIONES_CLAUDE.md` en el campo *Project instructions*
 3. Subir como documentos del proyecto:
    - Todos los `personas/persona_*.md`
    - `contexto/audiencia.md`
-   - `contexto/prueba-social.md`
-   - Los archivos de `/datos/` más recientes (cuando estén disponibles)
+   - Los archivos de `/datos/` disponibles
 4. Compartir el Project con el equipo
 
-> **Nota:** en la Opción B, cuando se actualicen datos o personas, hay que re-subir los archivos modificados al Project manualmente.
+> Cuando se actualicen datos o personas, re-subir los archivos modificados al Project manualmente.
 
 ---
 
 ## Ejemplos de consultas
 
-El archivo `/consultas/_TIPOS_DE_CONSULTA.md` tiene plantillas listas para usar con ejemplos de output esperado. Algunos tipos:
+```
+"¿Cómo reaccionaría cada persona a una función de pago único (sin fragmentar)?"
 
-- **Reacción a un feature nuevo** — cómo reaccionaría cada persona al verlo por primera vez
-- **Revisar un flujo o pantalla** — dónde se trabarían, qué no entenderían, si llegarían al final
-- **Evaluar copy o mensajes** — qué entienden, si genera acción o confusión
-- **Priorización de features** — cuál les cambiaría más el día a día
-- **Fricción en onboarding** — en qué momento perderían motivación o abandonarían
+"Tenemos dos versiones del mensaje de confirmación de envío. ¿Cuál genera menos ansiedad?"
+
+"Estamos pensando en agregar un paso de verificación de identidad al onboarding. ¿Qué pasa?"
+
+"¿Qué debería decir la notificación de 'dinero en camino' para no generar ansiedad?"
+```
+
+Ver `/consultas/_TIPOS_DE_CONSULTA.md` para plantillas y ejemplos de output esperado.
 
 ---
 
@@ -103,98 +133,72 @@ El archivo `/consultas/_TIPOS_DE_CONSULTA.md` tiene plantillas listas para usar 
 
 ```
 personas/
-  _PLANTILLA_PERSONA.md      ← usar para crear nuevas personas
-  personas.md                ← índice del panel y segmentos en lista de espera
-  persona_freelancer_argentino.md
-  persona_comerciante_boliviano.md
-  persona_venezolano_remesas.md
-  persona_usuario_crypto.md
+  _PLANTILLA_PERSONA.md            ← usar para crear personas nuevas
+  personas.md                      ← índice del panel y segmentos en lista de espera
+  persona_freelancer_argentino.md  → Martín / Laura
+  persona_comerciante_boliviano.md → Carlos
+  persona_venezolano_remesas.md    → Ana
+  persona_usuario_crypto.md        → Diego
+  persona_freelancer_colombiano.md → Valentina
 
 prompts/
-  panel_completo.md          ← orquestador del panel (uso general)
-  martin_freelancer.md       ← Martín en modo standalone
-  laura_freelancer.md        ← Laura en modo standalone (misma persona, voz femenina)
+  panel_completo.md       ← orquestador del panel completo
+  martin_freelancer.md    ← Martín standalone
+  laura_freelancer.md     ← Laura standalone (misma persona, voz femenina)
   carlos_comerciante.md
   ana_remesas.md
   diego_crypto.md
-
-contexto/
-  audiencia.md               ← segmentación, jobs to be done, casos de uso
-  prueba-social.md           ← métricas de credibilidad y testimonios
+  valentina_freelancer.md
 
 datos/
-  nps/                       ← respuestas de NPS por período
-  soporte/                   ← tickets y comentarios de soporte
-  entrevistas/               ← resúmenes de sesiones de investigación
+  nps/
+    nps_historico.md              ← NPS interno (40 respuestas)
+    nps_trustpilot_historico.md   ← Comentarios Trustpilot (~25)
+  soporte/
+    soporte_cancelaciones.md      ← Razones de cancelación (31 registros)
+  entrevistas/
+    encuesta_usuarios_2026.md     ← Encuesta cuantitativa
+
+contexto/
+  audiencia.md       ← segmentación, jobs to be done, casos de uso
+  prueba-social.md   ← métricas de credibilidad y testimonios
 
 consultas/
-  _TIPOS_DE_CONSULTA.md      ← guía de preguntas útiles con ejemplos de output
+  _TIPOS_DE_CONSULTA.md   ← guía de preguntas útiles con ejemplos
 
 decisiones/
-  _FORMATO_DECISION.md       ← formato para registrar decisiones tomadas con el panel
+  _FORMATO_DECISION.md    ← formato para registrar decisiones tomadas con el panel
 ```
 
 ---
 
-## Cómo mantener el panel actualizado
+## Cómo agregar datos nuevos
 
-El panel es tan bueno como los datos que lo alimentan. Estas son las acciones que más mejoran la calidad de las respuestas:
+Agregar datos **no requiere editar ningún perfil de persona**. Solo:
 
-### Actualizaciones periódicas (mensuales)
+1. Crear el archivo en la carpeta correspondiente siguiendo el formato:
+   - NPS → `datos/nps/nps_YYYY-MM.md` (ver `_FORMATO_NPS.md`)
+   - Soporte → `datos/soporte/soporte_YYYY-MM.md` (ver `_FORMATO_SOPORTE.md`)
+   - Entrevistas → `datos/entrevistas/entrevista_YYYY-MM.md` (ver `_FORMATO_ENTREVISTA.md`)
 
-| Qué cargar | Dónde | Formato |
-|---|---|---|
-| Respuestas de NPS del período | `datos/nps/nps_YYYY-MM.md` | Ver `datos/nps/_FORMATO_NPS.md` |
-| Tickets de soporte relevantes | `datos/soporte/soporte_YYYY-MM.md` | Ver `datos/soporte/_FORMATO_SOPORTE.md` |
-| Resúmenes de entrevistas | `datos/entrevistas/entrevista_YYYY-MM.md` | Ver `datos/entrevistas/_FORMATO_ENTREVISTA.md` |
-
-### Después de cargar datos nuevos
-
-Actualizar el campo `Estado de datos` en cada persona que esos datos cubran. Cambiar:
-
-```
-> Estado de datos: Sin datos reales cargados — perfil basado en audiencia.md y prueba-social.md.
-```
-
-por algo como:
-
-```
-> Estado de datos: Fundamentada en NPS Q1-2026 (89 respuestas), soporte marzo 2026 (34 tickets).
-```
-
-Esto le indica al modelo exactamente qué archivos buscar y qué tan respaldada está la persona.
-
-### Cuando cambie algo significativo en el producto o el mercado
-
-Si hay un cambio grande — nueva feature, cambio de precios, evento de mercado (devaluación, nueva regulación) — actualizar las fricciones y el contexto de las personas afectadas. Un perfil desactualizado puede generar respuestas que ya no reflejan la realidad del segmento.
-
-### Después de cada decisión tomada con el panel
-
-Registrar en `/decisiones/` usando el formato de `_FORMATO_DECISION.md`. Incluir:
-- Qué se decidió
-- Qué dijeron las personas
-- Si la decisión se validó después con usuarios reales
-
-Esto cierra el loop entre el panel sintético y la investigación real, y ayuda al equipo a detectar cuándo el panel acertó o no.
+2. Las personas lo leen automáticamente la próxima vez que responden.
 
 ---
 
-## Agregar una persona nueva
+## Cómo agregar una persona nueva
 
-Si una consulta implica un segmento no cubierto, el sistema lo detecta y ofrece crearlo. También se puede pedir manualmente:
-
-1. Copiar `personas/_PLANTILLA_PERSONA.md` y completar el perfil
+1. Copiar `personas/_PLANTILLA_PERSONA.md` y completar el perfil — especialmente la sección **"Cómo razona"**, que es lo que le da capacidad generativa
 2. Crear el prompt standalone en `/prompts/` siguiendo el formato de los existentes
 3. Agregar la persona al índice en `personas/personas.md`
-4. Agregar la persona a la tabla de `CLAUDE.md` y `INSTRUCCIONES_CLAUDE.md`
+4. Agregar la persona a la tabla de `CLAUDE.md`
 
-> **Nota:** una persona nueva sin datos reales es un perfil hipotético. Aclararlo en el campo `Estado de datos` y enriquecerlo cuando haya evidencia disponible.
+La nueva persona funciona desde el día uno con todos los datos que ya existen en `/datos/`.
 
 ---
 
 ## Límites del sistema
 
-- **No predice comportamiento:** las personas pueden decir qué les preocupa o qué les interesa, pero no cuánto pagarían, si van a churnar, o cuál es su probabilidad de recomendar. Eso requiere datos reales.
-- **No reemplaza investigación:** cuando hay acceso a usuarios reales, usarlo. El panel es para cuando no lo hay.
-- **No para decisiones de alto riesgo:** precios, pivots de negocio o eliminar features core requieren validación real.
-- **La calidad depende de los datos:** sin datos cargados, las respuestas son orientativas. Con datos actualizados, son mucho más confiables.
+- **No predice comportamiento cuantitativo:** las personas pueden decir qué les preocupa o qué prefieren, pero no cuánto pagarían, su probabilidad de churn, o un NPS exacto. Eso requiere datos reales.
+- **No reemplaza investigación cualitativa:** una entrevista de 30 minutos aporta profundidad que ningún perfil puede simular completamente. El panel es para cuando no hay acceso a usuarios reales.
+- **La calidad de Carlos y Diego es menor:** los datos actuales no tienen verbatims identificados directamente de esos segmentos. Sus respuestas son más orientativas que las de Martín y Ana.
+- **No para decisiones de alto riesgo:** cambios de precio, pivots de negocio o eliminación de features core requieren validación con usuarios reales.
