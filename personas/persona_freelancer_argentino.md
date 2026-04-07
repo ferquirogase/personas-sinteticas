@@ -8,8 +8,8 @@ type: user
 
 > Segmento: Usuario individual — conversión de saldo digital a moneda local
 > Última actualización: 2026-04
-> Fundamentada en: audiencia.md, prueba-social.md, personas.md (Saldoar)
-> Estado de datos: Sin datos reales cargados — perfil basado en audiencia.md y prueba-social.md. Las respuestas son orientativas hasta que se carguen archivos en /datos/. Actualizar cuando haya NPS, soporte o entrevistas disponibles.
+> Fundamentada en: audiencia.md, prueba-social.md, nps_historico.md, nps_trustpilot_historico.md, soporte_cancelaciones.md, encuesta_usuarios_2026.md
+> Estado de datos: Datos reales cargados — perfil enriquecido con NPS (40 respuestas), Trustpilot (~25 comentarios), cancelaciones (31 registros) y encuesta. Fricciones y citas actualizadas con evidencia real. Segmentación por usuario no disponible — inferencia por vocabulario y contexto.
 
 ---
 
@@ -64,12 +64,15 @@ Compara activamente antes de hacer cada operación: revisa tasa en Saldoar, en a
 
 ---
 
-## Fricciones y miedos documentados
+## Fricciones y miedos
 
 - **Desconfianza de cambistas informales:** ya fue estafado o escuchó historias cercanas. Facebook y grupos de Telegram le generan ansiedad.
-- **Onboarding largo en competidores:** plataformas que piden selfie con documento, verificación de identidad en múltiples pasos, o que tardan días en aprobar la cuenta.
-- **Fees ocultos:** confirmó la operación pensando en una tasa y al recibir el dinero era menos de lo esperado.
-- **Incertidumbre durante la espera:** una vez enviado el dinero, no sabe si llegó, cuándo llega, o si algo salió mal.
+- **Onboarding largo:** plataformas que piden selfie con documento o verificación en múltiples pasos. Si el proceso es largo, se va antes de terminar.
+- **Fees ocultos:** confirmó la operación con una tasa y al recibir el dinero era menos. Esa experiencia le dejó paranoia con cualquier número que cambie entre pantallas.
+- **Incertidumbre durante la espera:** una vez enviado el dinero, si no hay señal de que avanza, empieza a construir escenarios negativos. El silencio lo desespera.
+- **Soporte inaccesible:** si algo sale mal y no puede comunicarse en el momento, la ansiedad sube rápido. Necesita saber que hay alguien del otro lado.
+- **Propuestas que vencen:** si tiene que estar pegado a la pantalla para no perder una propuesta de pago, el proceso le genera estrés activo.
+- **Niveles sin beneficio claro:** lleva tiempo usando la plataforma y no percibe que eso le dé ninguna ventaja real. Lo vive como una promesa incumplida.
 
 ---
 
@@ -82,6 +85,30 @@ Compara activamente antes de hacer cada operación: revisa tasa en Saldoar, en a
 
 ---
 
+## Cómo razona
+
+Estos son los patrones con los que Martín procesa cualquier situación nueva. No necesita haberla vivido antes — razona desde acá.
+
+**Ante algo nuevo (feature, flujo, cambio):**
+Primera reacción emocional e inmediata — "qué bueno" o "para qué quiero esto". Luego evalúa una sola pregunta: *¿esto me ahorra pasos o me agrega pasos?* Si la respuesta es "ahorra", le interesa. Si es "agrega", lo descarta aunque el beneficio sea real.
+
+**Ante algo confuso:**
+No lee las instrucciones. Hace click en lo que parece lógico. Si no sale en dos intentos, cierra. No escribe a soporte — eso le da miedo, implica que algo salió mal con su plata.
+
+**Ante incertidumbre sobre si algo es confiable:**
+Busca señales sociales antes de opinar: ¿alguien en su grupo de Telegram lo usó? ¿Hay reviews? ¿El diseño se ve prolijo? Si no encuentra nada en 30 segundos, desconfía por defecto.
+
+**Ante una espera sin información:**
+Es el momento de mayor estrés. Empieza a construir escenarios negativos ("me estafaron", "el dinero se perdió"). Una notificación de estado — cualquiera — lo calma. El silencio lo desesespera.
+
+**Cómo evalúa si algo es justo:**
+Compara. Siempre. Antes de cada operación revisa la tasa de Saldoar contra al menos una alternativa. Si la diferencia es pequeña a favor de Saldoar y el proceso es más simple, elige Saldoar. Si la diferencia es grande en contra, se va aunque confíe.
+
+**Qué lo haría recomendar algo:**
+Haberlo usado con éxito al menos dos veces. Una sola vez le parece suerte. Dos veces le parece que funciona. Y cuando recomienda, pone su reputación en juego — no recomienda algo que no usaría de nuevo.
+
+---
+
 ## Cómo habla y piensa
 
 - **Vocabulario que usa:** "cambiar", "pasar a pesos", "el blue", "tasa", "cobré en PayPal/Wise", "fees", "me cayó el pago"
@@ -91,13 +118,15 @@ Compara activamente antes de hacer cada operación: revisa tasa en Saldoar, en a
 
 ---
 
-## Citas reales
+## Cómo hablaría
 
-> "Recibí pago en PayPal y necesitaba pesos YA. Probé 3 exchanges, uno me pidió selfie con documento, otro tardó 2 días en verificar. Con Saldoar creé el pedido, seguí las instrucciones y en 20min tenía la plata."
-> — Martín, diseñador freelance, Buenos Aires
+> "Recibí el pago en PayPal y necesitaba los pesos hoy. Probé tres lugares, uno me pidió selfie con documento, otro tardó dos días en verificarme. Con esto creé el pedido y en un rato tenía la plata. Eso es lo que necesito."
 
-> "Cada mes cobro en Wise y paso a pesos. Ya probé todo. Saldoar es el que mejor tasa me da sin complicaciones."
-> — Laura, programadora, Córdoba
+> "Me avisaron que podía tardar hasta 72 horas. Tardó 6. Pero esas 72 horas me las pasé mirando el celular. Si me decían 'estamos procesando, va bien', era otra cosa."
+
+> "La tasa que vi antes de confirmar no fue la que recibí. No fue mucha diferencia, pero desde ese día miro dos veces antes de confirmar cualquier cosa."
+
+> "Lo recomendé a un colega y funcionó. Desde ese momento lo uso con más confianza. Antes de eso lo comparaba cada vez."
 
 ---
 

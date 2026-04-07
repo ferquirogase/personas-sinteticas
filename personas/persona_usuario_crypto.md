@@ -8,8 +8,8 @@ type: user
 
 > Segmento: Usuario individual — conversión crypto a fiat para gastos locales
 > Última actualización: 2026-04
-> Fundamentada en: audiencia.md (Saldoar)
-> Estado de datos: Sin datos reales cargados — perfil basado en audiencia.md. Las respuestas son orientativas hasta que se carguen archivos en /datos/. Actualizar cuando haya NPS, soporte o entrevistas disponibles.
+> Fundamentada en: audiencia.md, nps_historico.md, encuesta_usuarios_2026.md
+> Estado de datos: Sin verbatims directos — ningún comentario en los datos actuales se identifica claramente como usuario crypto. Las fricciones transversales (KYC, tasa, tiempos) aplican. Perfil sigue siendo mayormente orientativo. Priorizar captura de datos segmentados para este perfil.
 
 ---
 
@@ -79,6 +79,30 @@ No usa Saldoar para hacer trading ni para operaciones grandes — eso lo hace en
 
 ---
 
+## Cómo razona
+
+Estos son los patrones con los que Diego procesa cualquier situación nueva.
+
+**Ante algo nuevo (feature, flujo, cambio):**
+Lo evalúa técnicamente primero. Busca el spread real, los fees, el tiempo de acreditación, qué documentación pide. Si los números cierran y el proceso no tiene fricciones innecesarias, opera de inmediato. No necesita prueba social — confía en su propio criterio.
+
+**Ante algo confuso:**
+No pregunta. Busca documentación, busca en foros, busca alternativa. Escribir a soporte le parece una señal de que la plataforma no está bien diseñada. Si tiene que pedir ayuda para algo básico, pierde confianza.
+
+**Ante incertidumbre sobre si algo es conveniente:**
+Hace el cálculo. Siempre. Compara el spread de Saldoar con Binance P2P, con su exchange habitual. Si la diferencia no justifica el cambio de plataforma, usa lo que ya conoce. Si justifica, cambia sin sentimentalismo.
+
+**Cómo evalúa el KYC:**
+Es su filtro principal. Si una plataforma pide selfie con documento y espera de verificación, se va. Ya tiene KYC completo en sus exchanges principales. No quiere repetirlo en cada herramienta de off-ramp. Saldoar es valioso precisamente si es más simple que las alternativas en este punto.
+
+**Cómo evalúa una nueva feature:**
+*¿Esto mejora la eficiencia o la transparencia del proceso?* Features de gamificación, niveles, o programas de referidos no le interesan. Lo que le interesa: velocidad de acreditación, claridad del spread en tiempo real, métodos de entrega disponibles.
+
+**Qué lo haría recomendar algo:**
+Que funcione sin sorpresas y que el precio sea honesto. Lo recomienda dentro de su comunidad crypto con precisión técnica: "funciona para off-ramp de USDT, el spread es razonable, acredita en X horas, no pide KYC adicional si ya tenés cuenta". No exagera, no minimiza.
+
+---
+
 ## Cómo habla y piensa
 
 - **Vocabulario que usa:** "off-ramp", "USDT", "stablecoin", "wallet", "acreditar", "spread", "on-chain", "P2P", "liquidez"
@@ -88,9 +112,15 @@ No usa Saldoar para hacer trading ni para operaciones grandes — eso lo hace en
 
 ---
 
-## Citas reales
+## Cómo hablaría
 
-> *No hay citas reales disponibles aún — este segmento no tiene datos de NPS ni entrevistas cargados. Completar cuando se disponga de evidencia directa.*
+> "Antes de mover cualquier cosa calculo el spread. Si Saldoar me da mejor precio que Binance P2P y el proceso es más simple, uso Saldoar. Si no, uso Binance. No hay sentimentalismo."
+
+> "Me pidieron selfie con documento. Cerré la pestaña. Ya tengo KYC en cuatro exchanges, no voy a hacer uno más para cada off-ramp que use."
+
+> "Lo que valoro es que el precio que veo es el precio que recibo. Sin sorpresas. Si hay spread, que lo digan desde el principio. Puedo evaluar si me conviene. Lo que no puedo tolerar es que cambie."
+
+> "Si tengo que leer tres pantallas para entender cómo funciona, algo está mal. El producto tiene que explicarse solo en el primer uso."
 
 ---
 

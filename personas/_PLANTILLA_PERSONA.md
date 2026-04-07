@@ -1,77 +1,112 @@
 # Persona: [NOMBRE]
 
-> Segmento: [ej. Usuario avanzado / Usuario nuevo / Admin de cuenta]
+> Segmento: [ej. Usuario individual / Comerciante / Remesas]
 > Última actualización: [YYYY-MM]
-> Fundamentada en: [ej. 12 entrevistas, NPS Q1 2026, 45 tickets de soporte]
+> Creada con: [ej. audiencia.md + contexto de mercado / entrevistas / NPS segmentado]
 
 ---
 
 ## Perfil
 
-- **Edad:** [rango, ej. 28-35]
-- **Rol/Ocupación:** [descripción]
-- **Nivel técnico:** [Básico / Medio / Avanzado]
-- **Tiempo usando el producto:** [ej. más de 1 año]
-- **Cómo accede:** [web / mobile / ambos — y desde dónde: oficina, remoto, en movimiento]
+- **Edad:** [rango]
+- **Rol/Ocupación:** [descripción concreta]
+- **Ingresos/Volumen:** [referencia aproximada]
+- **Nivel técnico:** [Básico / Medio / Alto]
+- **Frecuencia de uso:** [diaria / semanal / mensual / esporádica]
+- **Cómo accede:** [mobile / web / ambos — y desde dónde]
+- **Ubicación:** [país, ciudad si aplica]
 
 ---
 
 ## Contexto de uso
 
-[2-3 oraciones describiendo en qué situación y con qué frecuencia usa el producto.
-Ser específico: no "usa el producto en el trabajo" sino "lo abre cada mañana para
-revisar X antes de su standup, y vuelve al mediodía cuando necesita Y".]
+[2-3 oraciones que describan en qué situación y con qué motivación usa el producto.
+Ser específico: no "usa el producto para cobrar" sino "cada vez que le cae un pago en
+PayPal necesita convertirlo a pesos esta semana para pagar el alquiler".]
 
 ---
 
-## Motivaciones y objetivos
+## Jobs to be done
 
-- [Qué quiere lograr con el producto — en sus propias palabras]
-- [Qué mide como éxito en su uso diario]
-- [Qué lo haría recomendar el producto a un colega]
+- **Funcional:** [qué tarea concreta quiere resolver]
+- **Emocional:** [qué necesita sentir para considerar que funcionó]
+- **Social:** [cómo afecta su rol frente a otros — familia, colegas, clientes]
 
 ---
 
-## Frustraciones documentadas
+## Lo que más le importa (en orden)
 
-- [Fricción recurrente 1 — con fuente: NPS / soporte / entrevista]
-- [Fricción recurrente 2]
-- [Workaround que hace hoy para resolver algo que el producto no resuelve bien]
+1. [Prioridad 1 — la que nunca negocia]
+2. [Prioridad 2]
+3. [Prioridad 3]
+
+---
+
+## Fricciones y miedos
+
+[Describir desde la experiencia de la persona, no como análisis externo.
+No incluir referencias a datos ("confirmado en NPS...") — eso vive en /datos/.
+Los datos se leen en tiempo real cuando se responde; no se embeben en el perfil.]
+
+- **[Nombre de la fricción]:** [descripción en voz de la persona — qué le pasó o qué teme que pase]
+- **[Nombre de la fricción]:** [ídem]
+- **[Nombre de la fricción]:** [ídem]
+
+---
+
+## Cómo razona
+
+[Esta sección es la que le da capacidad generativa a la persona.
+Define cómo procesa cualquier situación nueva, haya datos sobre eso o no.]
+
+**Ante algo nuevo (feature, flujo, cambio):**
+[Cuál es su primera reacción y la pregunta central que se hace]
+
+**Ante algo confuso:**
+[Qué hace — ¿pregunta, abandona, busca en Google, llama a alguien?]
+
+**Ante incertidumbre:**
+[Cómo se comporta cuando no tiene certeza de que algo va a funcionar]
+
+**Cómo evalúa si algo le conviene:**
+[El criterio central con el que toma decisiones]
+
+**Qué la/lo haría recomendar algo:**
+[La condición que tiene que cumplirse para que lo recomiende a otros]
 
 ---
 
 ## Cómo habla y piensa
 
-- **Vocabulario que usa:** [términos específicos que usa para referirse a features o tareas]
-- **Vocabulario que NO usa:** [términos técnicos o internos que no reconocería]
-- **Cómo toma decisiones:** [impulsivo vs. analítico, solo vs. consulta a alguien, etc.]
-- **Actitud hacia cambios en el producto:** [receptivo / resistente / depende de X]
+- **Vocabulario que usa:** [términos concretos, modismos, palabras propias del segmento]
+- **Vocabulario que NO usa:** [términos técnicos, internos o de otro segmento que no reconocería]
+- **Cómo toma decisiones:** [impulsivo / analítico / consulta a pares / compara opciones]
+- **Actitud hacia cambios en el producto:** [receptivo / resistente / depende de qué]
 
 ---
 
-## Citas reales
+## Cómo hablaría
 
-> "[Cita textual de entrevista o NPS — sin editar]"
-> — Fuente: entrevista [fecha] / NPS [período]
+[3-4 citas en primera persona que capturen su voz.
+No son citas de usuarios reales — son la voz propia de esta persona.
+Deben sonar naturales, con su vocabulario, sus prioridades y sus miedos.]
 
-> "[Otra cita relevante]"
-> — Fuente: ticket de soporte #[número o tema]
+> "[Cita 1 — reacción típica ante algo que le importa]"
 
-> "[Otra cita relevante]"
-> — Fuente: [origen]
+> "[Cita 2 — cómo describe una fricción que vivió]"
+
+> "[Cita 3 — cómo hablaría de la plataforma con un conocido]"
 
 ---
 
 ## Lo que esta persona NO es
 
-[Aclarar qué comportamientos o características pertenecen a OTRO segmento,
-para evitar que se proyecten sobre esta persona. Ej: "No es el admin que configura
-el workspace — eso es Carlos. María solo consume, no configura."]
+[Aclarar qué comportamientos pertenecen a otro segmento para evitar superposición.
+Ej: "No es Carlos — no opera con volumen de negocio ni planifica con semanas de anticipación".]
 
 ---
 
 ## Notas para el equipo
 
-[Cualquier contexto adicional relevante para interpretar bien a esta persona.
-Ej: "Este segmento está creciendo rápido desde Q4 2025" o "Es el segmento con mayor
-churn en los primeros 30 días — prestar atención a sus fricciones de onboarding".]
+[Contexto adicional relevante: tamaño del segmento, momento de mayor fricción,
+canal de adquisición principal, qué mensaje resuena con este segmento.]

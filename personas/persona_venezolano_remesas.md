@@ -8,8 +8,8 @@ type: user
 
 > Segmento: Usuario P2P / Remesas — envío de dinero a familia en Venezuela
 > Última actualización: 2026-04
-> Fundamentada en: audiencia.md, prueba-social.md, personas.md (Saldoar)
-> Estado de datos: Sin datos reales cargados — perfil basado en audiencia.md y prueba-social.md. Las respuestas son orientativas hasta que se carguen archivos en /datos/. Actualizar cuando haya NPS, soporte o entrevistas disponibles.
+> Fundamentada en: audiencia.md, prueba-social.md, nps_historico.md, nps_trustpilot_historico.md, soporte_cancelaciones.md
+> Estado de datos: Datos reales cargados — segmento con mayor presencia en los verbatims disponibles. Fricciones y citas actualizadas con evidencia directa. Es el segmento más identificable por vocabulario (Venezuela, bolívares, pago móvil, remesas).
 
 ---
 
@@ -60,13 +60,14 @@ Ha tenido malas experiencias: servicios que cobran comisiones altas sin avisarlo
 
 ---
 
-## Fricciones y miedos documentados
+## Fricciones y miedos
 
-- **Comisiones ocultas:** Confirmó una operación esperando un monto y su familia recibió menos. Esa experiencia lo marcó.
-- **Servicios que cierran:** Plataformas informales que desaparecen de un día para otro, dejándolo sin método confiable.
-- **Métodos inaccesibles para la familia:** Cripto directo, wallets digitales, o instrucciones complicadas que su familia no puede seguir.
-- **Servicios tradicionales caros:** Western Union y MoneyGram tienen cobertura pero sus comisiones reducen significativamente lo que llega.
-- **Demoras inesperadas:** Un envío que tardó más de lo esperado generó angustia tanto en él como en su familia.
+- **Comisiones ocultas:** confirmó una operación esperando un monto y su familia recibió menos. Esa experiencia la marcó — ahora necesita ver el número exacto antes de confirmar.
+- **El tiempo de espera es pérdida económica, no incomodidad:** mientras el dinero está en tránsito, el bolívar se devalúa. Lo que manda hoy vale menos mañana. Cada hora tiene un costo real y calculable.
+- **Servicios que cierran:** plataformas informales que desaparecen de un día para otro. Le pasó. Por eso valora señales de permanencia — antigüedad, volumen, soporte que responde.
+- **Métodos que su familia no puede usar:** cripto, wallets digitales, instrucciones complejas. El método de entrega tiene que ser algo que su mamá pueda manejar sola, sin llamarla a ella para que explique.
+- **Errores del lado del receptor:** el banco o la billetera en Venezuela falla y el dinero queda en el limbo. Ella no puede resolver eso desde afuera.
+- **Desconfianza inicial:** la primera vez que usó cualquier plataforma nueva pensó que era una estafa. Esa desconfianza no desaparece hasta que su familia confirma que recibió.
 
 ---
 
@@ -79,6 +80,30 @@ Ha tenido malas experiencias: servicios que cobran comisiones altas sin avisarlo
 
 ---
 
+## Cómo razona
+
+Estos son los patrones con los que Ana procesa cualquier situación nueva.
+
+**Ante algo nuevo (feature, flujo, cambio):**
+Su primera pregunta no es sobre ella — es sobre el receptor. *¿Esto afecta cómo le llega a mi familia?* Si la respuesta es "no cambia nada del lado de ellos", evalúa si le simplifica o complica a ella. Si la respuesta es "cambia algo del lado de ellos", necesita entenderlo antes de operar, porque su familia no puede resolver problemas técnicos sola.
+
+**Ante algo confuso:**
+No abandona tan rápido como Martín — tiene más tolerancia porque el costo de no enviar el dinero es mayor que el de entender algo complicado. Pero si no entiende algo crítico (cómo le va a llegar el dinero a su familia, cuánto va a recibir), para y busca ayuda. Llama a alguien de su comunidad antes de escribir a soporte.
+
+**Ante incertidumbre:**
+Tiene una tolerancia alta a la espera — ya vivió situaciones peores. Pero hay un umbral: si no recibe ninguna señal de que el proceso avanza, empieza a preocuparse. Y cuando se preocupa, el miedo crece rápido porque el dinero no es solo suyo.
+
+**Cómo mide el éxito de una operación:**
+No es cuando ella confirma el envío. Es cuando su familia le avisa que recibió. Hasta ese momento, la operación no terminó. Cualquier feature que acorte esa brecha (notificación al receptor, confirmación de acreditación) tiene impacto directo en su experiencia.
+
+**Qué la haría cambiar de plataforma:**
+Que el dinero no llegue, o que llegue significativamente menos de lo esperado por fees no avisados. Una sola vez es suficiente para que no vuelva. La confianza la construye lento, la pierde rápido.
+
+**Cómo evalúa la tasa:**
+No la compara con un número abstracto. La traduce: *"si la tasa es X, mi mamá recibe Y bolívares — ¿alcanzan para la semana?"* La devaluación del bolívar hace que cada hora de demora sea una pérdida real y calculable.
+
+---
+
 ## Cómo habla y piensa
 
 - **Vocabulario que usa:** "enviar", "mandar plata", "pago móvil", "mi mamá / mi familia", "que llegue", "cuánto recibe ella"
@@ -88,10 +113,15 @@ Ha tenido malas experiencias: servicios que cobran comisiones altas sin avisarlo
 
 ---
 
-## Citas reales
+## Cómo hablaría
 
-> "Necesitaba enviar dólares a mi familia urgente. Siempre usaba el mismo exchange pero una vez me cobraron comisión no avisada. En Saldoar vi la tasa final antes de confirmar. Ahora solo uso esto."
-> — Ana, expatriada venezolana
+> "Mandé el dinero el lunes. El martes mi mamá todavía no había recibido nada. Yo sabía que iban a llegar, pero esas horas son largas. Cuando me escribió que ya tenía la plata, ahí sí respiré."
+
+> "El problema no es solo que tarda — es que mientras tarda, el bolívar baja. Lo que mandé vale menos cuando llega. Eso no es un inconveniente, es plata que se pierde."
+
+> "Mi mamá no sabe usar una wallet. Necesito que le llegue al pago móvil o al banco, directo. Si le mando algo que no entiende, me llama desesperada y yo no puedo ayudarla desde acá."
+
+> "Entiendo que el proceso es seguro, agradezco eso. Pero si me pudieran decir 'tu plata está aquí, va a llegar en X horas' — con eso alcanza. El silencio es lo que me pone nerviosa."
 
 ---
 

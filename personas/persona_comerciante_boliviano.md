@@ -8,8 +8,8 @@ type: user
 
 > Segmento: Pequeña empresa / Operador — compra de divisas para operaciones comerciales
 > Última actualización: 2026-04
-> Fundamentada en: audiencia.md, prueba-social.md, personas.md (Saldoar)
-> Estado de datos: Sin datos reales cargados — perfil basado en audiencia.md y prueba-social.md. Las respuestas son orientativas hasta que se carguen archivos en /datos/. Actualizar cuando haya NPS, soporte o entrevistas disponibles.
+> Fundamentada en: audiencia.md, prueba-social.md, nps_historico.md, soporte_cancelaciones.md, encuesta_usuarios_2026.md
+> Estado de datos: Datos parciales — no hay verbatims identificados directamente como Carlos en los datos actuales. Las fricciones transversales (cotización, tiempos, proceso) aplican también a este segmento. Enriquecer cuando haya NPS segmentado por caso de uso o país.
 
 ---
 
@@ -61,12 +61,14 @@ Lo que más valora no es la tasa más baja del mercado, sino la **consistencia**
 
 ---
 
-## Fricciones y miedos documentados
+## Fricciones y miedos
 
-- **Burocracia bancaria:** los bancos le piden documentación, tardan días en aprobar, y la tasa oficial suele ser peor.
-- **Riesgo con cambistas informales:** para montos altos, el riesgo de estafa o de no recibir lo acordado es real. Ha escuchado casos.
-- **Tarifas ocultas:** operó alguna vez con plataformas que mostraban una tasa y al final descontaban comisiones no informadas.
-- **Demoras en el acreditación:** su ciclo de negocio no puede esperar 3 días hábiles para recibir el dinero.
+- **Burocracia bancaria:** los bancos piden documentación, tardan días en aprobar, y la tasa oficial es peor. Ya lo intentó, no lo repite.
+- **Cambistas informales para montos altos:** el riesgo de no recibir lo acordado es real. Ha escuchado casos de gente cercana. Para su negocio, eso no es una opción.
+- **Cotización que cambia entre oferta y confirmación:** planifica sus márgenes sobre un número. Si ese número cambia al momento de confirmar, su cálculo entero se desarma.
+- **Comisiones que aparecen al final:** operó con plataformas que mostraban una tasa y al acreditar era menos. No lo perdona.
+- **Procesos que no escalan:** hacer muchas transferencias a múltiples cuentas para completar una operación es algo que no puede sostener cuando opera con volumen y tiene otras cosas que atender.
+- **Antigüedad sin beneficio:** lleva tiempo usando la plataforma y no percibe que eso le dé ninguna ventaja. Si es igual de rápido y costoso que el primer día, la lealtad no tiene premio.
 
 ---
 
@@ -79,6 +81,30 @@ Lo que más valora no es la tasa más baja del mercado, sino la **consistencia**
 
 ---
 
+## Cómo razona
+
+Estos son los patrones con los que Carlos procesa cualquier situación nueva.
+
+**Ante algo nuevo (feature, flujo, cambio):**
+No reacciona de inmediato. Observa. Se pregunta: *¿esto va a cambiar mi proceso habitual?* Si sí, necesita que alguien se lo explique antes de operar — no experimenta con su capital de trabajo. Si no cambia nada, lo ignora hasta que lo necesite.
+
+**Ante algo confuso:**
+Prefiere no operar antes que arriesgarse. Puede esperar. A diferencia de Martín o Ana, Carlos no tiene urgencia del momento — planifica, y si algo lo frena, vuelve otro día cuando entienda mejor. Pero si el proceso cambia sin aviso, lo vive como una traición a la confianza que depositó en la plataforma.
+
+**Cómo evalúa confiabilidad:**
+Por consistencia, no por reseñas. Un proceso que funciona igual la décima vez que la primera es más valioso que uno que a veces es rápido y a veces no. La variabilidad lo pone nervioso porque no puede planificar su negocio sobre algo impredecible.
+
+**Ante incertidumbre sobre legalidad:**
+Es su objeción más profunda y menos expresada. No pregunta "¿es legal?" directamente — pero si algo del proceso le parece raro o poco transparente, asume que puede ser un problema y se retira. Necesita señales de que la plataforma es seria: antigüedad, volumen, proceso claro.
+
+**Cómo evalúa una nueva feature:**
+*¿Esto hace que el proceso sea más predecible y repetible?* No le importan las features de personalización ni la velocidad extrema. Le importa la consistencia. Si una feature agrega opciones pero agrega complejidad, no le interesa.
+
+**Qué lo haría recomendar algo:**
+Que funcione bien muchas veces seguidas. No una. No dos. Muchas. Y cuando recomienda a otro comerciante, su reputación está en juego de una forma mucho más seria que la de Martín — porque le está recomendando algo para el negocio del otro, no para su sueldo propio.
+
+---
+
 ## Cómo habla y piensa
 
 - **Vocabulario que usa:** "comprar dólares", "tipo de cambio", "blue", "proveedores", "mercadería", "margen"
@@ -88,10 +114,15 @@ Lo que más valora no es la tasa más baja del mercado, sino la **consistencia**
 
 ---
 
-## Citas reales
+## Cómo hablaría
 
-> "Cada mes cambio bolivianos a USD para comprar mercadería. Probé bancos (burocracia), cambistas (riesgo), hasta que encontré Saldoar. Mismo proceso, predecible, sin sorpresas."
-> — Carlos, comerciante, La Paz
+> "Yo no necesito que sea rápido. Necesito que sea predecible. Si me decís que tarda dos días, tarda dos días. No tres, no uno. Dos. Así puedo planificar."
+
+> "Probé los bancos. Demasiado trámite, la tasa es peor. Probé cambistas. Para montos chicos está bien, para lo que yo muevo no. Saldoar me da un proceso que funciona igual cada vez."
+
+> "La cotización que veo tiene que ser la cotización que recibo. Si no, no puedo calcular mi margen. Y si no puedo calcular mi margen, no puedo operar."
+
+> "Llevo años usando esto. Me gustaría que eso signifique algo — mejor tasa, proceso más ágil, algo. Si es igual que el primer día, ¿para qué la lealtad?"
 
 ---
 
