@@ -1,5 +1,7 @@
 # Panel de Usuarios Sintéticos — Saldoar
 
+![Panel de Usuarios Sintéticos — Saldoar](cover.svg)
+
 Un sistema de personas simuladas por IA para hacer pruebas de UX, validar copy y priorizar features cuando no hay tiempo o recursos para investigación con usuarios reales.
 
 ---
