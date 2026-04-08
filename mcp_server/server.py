@@ -2,21 +2,20 @@
 """
 MCP Server — Panel de Usuarios Sintéticos de Saldoar
 
-Expone las personas sintéticas como herramientas MCP para que cualquier
-miembro del equipo pueda consultarlas desde Claude Code, Cursor, o cualquier
-cliente compatible con MCP.
+No requiere API key propia. El servidor prepara el contexto (personas + datos
+relevantes) y lo devuelve a Claude Code, que ejecuta la inferencia usando la
+cuenta del usuario.
 
 Herramientas disponibles:
-  ask_panel     — Panel completo responde a una consulta
-  ask_persona   — Una persona específica responde
-  user_audit    — Auditoría estructurada de feature o copy desde todas las personas
-  detect_gap    — Detecta si una consulta implica un segmento no cubierto
+  ask_panel     — Contexto completo del panel para responder una consulta
+  ask_persona   — Contexto de una persona específica
+  user_audit    — Contexto estructurado para auditoría de feature o copy
+  detect_gap    — Contexto para detectar segmentos no cubiertos
+  rebuild_index — Fuerza reindexación del vector store
 """
 
-import os
 from pathlib import Path
 
-import anthropic
 from mcp.server.fastmcp import FastMCP
 from vector_store import retrieve_relevant_data, build_index, start_watcher
 
@@ -24,11 +23,7 @@ from vector_store import retrieve_relevant_data, build_index, start_watcher
 
 REPO_ROOT = Path(__file__).parent.parent
 PERSONAS_DIR = REPO_ROOT / "personas"
-DATOS_DIR = REPO_ROOT / "datos"
-CONTEXTO_DIR = REPO_ROOT / "contexto"
 PROMPTS_DIR = REPO_ROOT / "prompts"
-
-MODEL = "claude-opus-4-6"
 
 PERSONA_FILES = {
     "martin": "persona_freelancer_argentino.md",
@@ -40,13 +35,11 @@ PERSONA_FILES = {
 }
 
 mcp = FastMCP("saldoar-personas")
-client = anthropic.Anthropic()
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 def _read_file(path: Path) -> str:
-    """Lee un archivo markdown. Retorna string vacío si no existe."""
     try:
         return path.read_text(encoding="utf-8")
     except FileNotFoundError:
@@ -54,7 +47,6 @@ def _read_file(path: Path) -> str:
 
 
 def _load_all_personas() -> str:
-    """Carga todos los archivos de personas en un string consolidado."""
     parts = []
     for filename in sorted(PERSONAS_DIR.glob("persona_*.md")):
         content = _read_file(filename)
@@ -63,90 +55,22 @@ def _load_all_personas() -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _get_datos_for_query(query: str) -> str:
-    """
-    Recupera los fragmentos de datos más relevantes semánticamente para la consulta.
-    Reemplaza la carga completa de todos los datos — escala sin degradar calidad.
-    """
-    return retrieve_relevant_data(query, n_results=10)
-
-
 def _load_persona(name: str) -> str:
-    """Carga el archivo de una persona específica por nombre."""
-    name_lower = name.lower()
-    filename = PERSONA_FILES.get(name_lower)
+    filename = PERSONA_FILES.get(name.lower())
     if not filename:
         return ""
     return _read_file(PERSONAS_DIR / filename)
 
 
 def _load_panel_prompt() -> str:
-    """Carga el prompt del orquestador del panel completo."""
     return _read_file(PROMPTS_DIR / "panel_completo.md")
 
 
-def _build_panel_system_prompt(datos: str) -> str:
-    personas = _load_all_personas()
-    panel_prompt = _load_panel_prompt()
-
-    system = f"""{panel_prompt}
-
----
-
-## Perfiles completos de las personas
-
-Los siguientes son los perfiles detallados de cada persona del panel.
-Usalos para responder con su voz, sus prioridades y su forma de razonar.
-
-{personas}
-"""
-
-    if datos:
-        system += f"""
-
----
-
-## Datos reales disponibles
-
-Antes de responder, revisá estos datos e identificá patrones relevantes
-para la consulta. Usalos como evidencia que concreta las respuestas
-de cada persona cuando aplique.
-
-{datos}
-"""
-    else:
-        system += "\n\n*(Sin datos reales cargados — respuesta basada en perfil.)*"
-
-    return system
-
-
-def _build_persona_system_prompt(persona_name: str, persona_content: str, datos: str) -> str:
-    name_display = persona_name.capitalize()
-
-    system = f"""Sos {name_display}, uno de los usuarios sintéticos del panel de Saldoar.
-
-Respondés en primera persona, con tu propia voz y perspectiva.
-No describís al usuario — SOS el usuario. Nunca rompés el personaje.
-
-## Tu perfil
-
-{persona_content}
-"""
-
-    if datos:
-        system += f"""
-
----
-
-## Datos reales disponibles
-
-Podés usar estos datos como evidencia que respalda lo que sentís o pensás.
-Si algo en los datos resuena con tu experiencia, mencionalo naturalmente.
-
-{datos}
-"""
-
-    return system
+def _datos_section(query: str) -> str:
+    datos = retrieve_relevant_data(query, n_results=10)
+    if not datos:
+        return "*(Sin datos reales disponibles para esta consulta — responder desde perfil.)*"
+    return f"## Datos reales relevantes\n\n{datos}"
 
 
 # ─── Herramientas MCP ─────────────────────────────────────────────────────────
@@ -154,40 +78,50 @@ Si algo en los datos resuena con tu experiencia, mencionalo naturalmente.
 @mcp.tool()
 def ask_panel(pregunta: str) -> str:
     """
-    Consulta al panel completo de personas sintéticas de Saldoar.
+    Prepara el contexto completo del panel para responder una consulta.
 
-    El orquestador decide qué personas son relevantes para la pregunta
-    y responde en primera persona desde cada una. Ideal para evaluar
-    features, copy, flujos o decisiones de producto.
+    Devuelve los perfiles de todas las personas + los datos más relevantes
+    para la pregunta. Claude Code usa este contexto con la cuenta del usuario
+    para generar las respuestas en primera persona.
 
     Args:
         pregunta: La consulta, feature, copy o escenario a evaluar.
 
     Returns:
-        Respuestas en primera persona desde las personas relevantes del panel.
+        Contexto completo listo para que Claude genere las respuestas del panel.
     """
-    datos = _get_datos_for_query(pregunta)
-    system = _build_panel_system_prompt(datos)
+    personas = _load_all_personas()
+    panel_prompt = _load_panel_prompt()
+    datos = _datos_section(pregunta)
 
-    message = client.messages.create(
-        model=MODEL,
-        max_tokens=4096,
-        thinking={"type": "adaptive"},
-        system=system,
-        messages=[{"role": "user", "content": pregunta}],
-    )
+    return f"""{panel_prompt}
 
-    for block in message.content:
-        if block.type == "text":
-            return block.text
+---
 
-    return "No se pudo generar respuesta."
+## Perfiles completos de las personas
+
+{personas}
+
+---
+
+{datos}
+
+---
+
+## Consulta del equipo
+
+{pregunta}
+
+---
+
+Respondé ahora desde las personas relevantes, siguiendo el formato del prompt de arriba.
+"""
 
 
 @mcp.tool()
 def ask_persona(nombre: str, pregunta: str) -> str:
     """
-    Consulta a una persona específica del panel.
+    Prepara el contexto de una persona específica para responder una consulta.
 
     Personas disponibles: martin, laura, carlos, ana, diego, valentina
 
@@ -196,125 +130,127 @@ def ask_persona(nombre: str, pregunta: str) -> str:
         pregunta: La consulta o escenario a evaluar.
 
     Returns:
-        Respuesta en primera persona desde esa persona específica.
+        Contexto de esa persona listo para que Claude genere su respuesta.
     """
     nombre_lower = nombre.lower()
     if nombre_lower not in PERSONA_FILES:
         nombres_validos = ", ".join(sorted(PERSONA_FILES.keys()))
-        return f"Persona '{nombre}' no encontrada. Personas disponibles: {nombres_validos}"
+        return f"Persona '{nombre}' no encontrada. Disponibles: {nombres_validos}"
 
-    persona_content = _load_persona(nombre_lower)
-    if not persona_content:
+    perfil = _load_persona(nombre_lower)
+    if not perfil:
         return f"No se pudo cargar el perfil de '{nombre}'."
 
-    datos = _get_datos_for_query(pregunta)
-    system = _build_persona_system_prompt(nombre_lower, persona_content, datos)
+    datos = _datos_section(pregunta)
+    nombre_display = nombre_lower.capitalize()
 
-    message = client.messages.create(
-        model=MODEL,
-        max_tokens=2048,
-        thinking={"type": "adaptive"},
-        system=system,
-        messages=[{"role": "user", "content": pregunta}],
-    )
+    return f"""Sos {nombre_display}, usuario sintético del panel de Saldoar.
 
-    for block in message.content:
-        if block.type == "text":
-            return block.text
+Respondés en primera persona, con tu propia voz. No describís al usuario — SOS el usuario.
+Nunca rompés el personaje.
 
-    return "No se pudo generar respuesta."
+## Tu perfil
+
+{perfil}
+
+---
+
+{datos}
+
+---
+
+## Consulta
+
+{pregunta}
+
+---
+
+Respondé ahora como {nombre_display}, en primera persona.
+"""
 
 
 @mcp.tool()
 def user_audit(feature_o_copy: str) -> str:
     """
-    Auditoría estructurada de una feature o copy desde todas las personas.
+    Prepara el contexto para una auditoría estructurada de feature o copy.
 
-    Genera un análisis con: reacción inicial, lo que genera confianza,
-    lo que genera fricción, y el veredicto de cada persona.
-    Útil antes de lanzar un cambio importante.
+    Devuelve instrucciones de formato + perfiles + datos relevantes.
+    Claude Code genera el análisis con reacción, fricción y veredicto
+    de cada persona.
 
     Args:
         feature_o_copy: Descripción de la feature, flujo, copy o cambio a auditar.
 
     Returns:
-        Auditoría estructurada con la perspectiva de cada persona.
+        Contexto estructurado listo para que Claude genere la auditoría.
     """
-    datos = _get_datos_for_query(feature_o_copy)
     personas = _load_all_personas()
     panel_prompt = _load_panel_prompt()
+    datos = _datos_section(feature_o_copy)
 
-    audit_instruction = """
-Cuando el equipo pida una auditoría, respondés con este formato para CADA persona relevante:
-
-## [Nombre] — [Veredicto en una frase]
-
-**Reacción inicial:** [En una línea, qué siente al ver esto por primera vez]
-
-**Lo que genera confianza:** [Qué le da seguridad o le parece bien]
-
-**Lo que genera fricción:** [Qué le preocupa, confunde o molesta]
-
-**Veredicto:** [Lo usaría / Lo usaría con reservas / No lo usaría] — [razón en una oración]
+    return f"""{panel_prompt}
 
 ---
 
-Al final, si hay un patrón claro entre personas:
+## Formato de auditoría
 
-## Síntesis
-[1-2 líneas con el insight más importante para el equipo de producto]
-"""
+Para CADA persona relevante, respondé con esta estructura:
 
-    system = f"""{panel_prompt}
+### [Nombre] — [veredicto en una frase]
 
-{audit_instruction}
+**Reacción inicial:** [qué siente al ver esto por primera vez]
+
+**Lo que genera confianza:** [qué le da seguridad o le parece bien]
+
+**Lo que genera fricción:** [qué le preocupa, confunde o molesta]
+
+**Veredicto:** Lo usaría / Lo usaría con reservas / No lo usaría — [razón en una oración]
+
+---
+
+Al final, si hay un patrón claro:
+
+### Síntesis para el equipo
+[1-2 líneas con el insight más importante]
+
+---
 
 ## Perfiles completos
 
 {personas}
+
+---
+
+{datos}
+
+---
+
+## Qué auditar
+
+{feature_o_copy}
+
+---
+
+Generá la auditoría completa ahora.
 """
-
-    if datos:
-        system += f"\n\n## Datos reales\n\n{datos}"
-
-    message = client.messages.create(
-        model=MODEL,
-        max_tokens=4096,
-        thinking={"type": "adaptive"},
-        system=system,
-        messages=[{
-            "role": "user",
-            "content": f"Hacé una auditoría completa de esto:\n\n{feature_o_copy}"
-        }],
-    )
-
-    for block in message.content:
-        if block.type == "text":
-            return block.text
-
-    return "No se pudo generar la auditoría."
 
 
 @mcp.tool()
 def detect_gap(contexto: str) -> str:
     """
-    Detecta si una consulta implica un segmento de usuario no cubierto por el panel.
-
-    Analiza el contexto y sugiere si hace falta crear una nueva persona.
-    Si detecta un gap, describe el perfil propuesto.
+    Prepara el contexto para detectar si una consulta implica un segmento
+    no cubierto por el panel actual.
 
     Args:
-        contexto: Descripción del segmento, usuario, o escenario a analizar.
+        contexto: Descripción del segmento, usuario o escenario a analizar.
 
     Returns:
-        Análisis de cobertura del panel y propuesta de nueva persona si aplica.
+        Contexto listo para que Claude analice la cobertura del panel.
     """
     personas = _load_all_personas()
 
-    system = f"""Sos un analista del panel de usuarios sintéticos de Saldoar.
-
-Tu tarea es determinar si el contexto que se describe está cubierto por las personas
-actuales del panel, o si implica un segmento nuevo que debería tener su propia persona.
+    return f"""Analizá si el siguiente contexto está cubierto por las personas actuales
+del panel de usuarios sintéticos de Saldoar, o si implica un segmento nuevo.
 
 ## Personas actuales del panel
 
@@ -323,43 +259,28 @@ actuales del panel, o si implica un segmento nuevo que debería tener su propia 
 ## Criterios para detectar un gap
 
 Un gap existe cuando el contexto describe:
-- Un segmento geográfico sin cobertura (país o ciudad no representada)
-- Un caso de uso distinto a los cuatro actuales (remesas, freelance, comercio, crypto)
+- Un segmento geográfico sin cobertura
+- Un caso de uso distinto a los actuales (remesas, freelance, comercio, crypto)
 - Un perfil demográfico significativamente diferente
-- Una motivación o trabajo-por-hacer que no encaja en ninguna persona existente
+- Una motivación que no encaja en ninguna persona existente
 
 ## Formato de respuesta
 
-Si HAY cobertura:
-Explicá qué persona del panel cubre este segmento y por qué, con qué limitaciones.
+Si HAY cobertura: explicá qué persona cubre el segmento y con qué limitaciones.
 
-Si NO HAY cobertura:
-Describí el gap detectado y proponé:
-- Nombre tentativo para la nueva persona
-- Segmento y país
-- Jobs to be done principales
-- 2-3 diferenciadores clave respecto a las personas existentes
-- Qué datos serían necesarios para fundamentarla bien
+Si NO HAY cobertura: describí el gap y proponé nombre, segmento, país,
+jobs to be done principales, diferenciadores clave, y qué datos harían falta.
 
-Sé directo. Si hay cobertura parcial, decilo.
+---
+
+## Contexto a analizar
+
+{contexto}
+
+---
+
+Analizá ahora.
 """
-
-    message = client.messages.create(
-        model=MODEL,
-        max_tokens=2048,
-        thinking={"type": "adaptive"},
-        system=system,
-        messages=[{
-            "role": "user",
-            "content": f"¿El panel actual cubre este segmento?\n\n{contexto}"
-        }],
-    )
-
-    for block in message.content:
-        if block.type == "text":
-            return block.text
-
-    return "No se pudo completar el análisis."
 
 
 @mcp.tool()
@@ -367,18 +288,16 @@ def rebuild_index() -> str:
     """
     Fuerza la reconstrucción del índice de búsqueda semántica.
 
-    Llamar después de agregar archivos nuevos en /datos/ si el servidor
-    ya estaba corriendo. En condiciones normales el servidor detecta
-    cambios automáticamente al reiniciarse.
+    Útil si se agregaron archivos en /datos/ con el servidor corriendo
+    y el watcher automático no los detectó.
 
     Returns:
-        Confirmación con la cantidad de chunks indexados.
+        Confirmación con cantidad de chunks indexados.
     """
-    from vector_store import build_index, invalidate_cache
+    from vector_store import invalidate_cache
     invalidate_cache()
     collection = build_index(force=True)
-    total = collection.count()
-    return f"Índice reconstruido. {total} fragmentos indexados y listos para búsqueda semántica."
+    return f"Índice reconstruido: {collection.count()} fragmentos indexados."
 
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
@@ -387,5 +306,5 @@ if __name__ == "__main__":
     print("[saldoar-personas] Inicializando índice de búsqueda semántica...")
     build_index()
     start_watcher()
-    print("[saldoar-personas] Servidor listo.")
+    print("[saldoar-personas] Servidor listo. No requiere API key propia.")
     mcp.run()

@@ -45,7 +45,9 @@ Personas: carga los perfiles completos (worldview + razonamiento)
         ↓
 Datos: búsqueda semántica — recupera solo los fragmentos más relevantes
         ↓
-Claude Opus 4.6 genera respuesta en primera persona desde cada persona
+Servidor devuelve el contexto armado (no llama a ninguna API propia)
+        ↓
+Claude Code genera la respuesta usando la cuenta del usuario
         ↓
 Respuesta al equipo
 ```
@@ -134,12 +136,11 @@ cd personas-sinteticas
 # 2. Instalar dependencias
 pip install -r mcp_server/requirements.txt
 
-# 3. Configurar la API key de Anthropic
-export ANTHROPIC_API_KEY=sk-ant-...
-
-# 4. Abrir en Claude Code — el .mcp.json activa el servidor automáticamente
+# 3. Abrir en Claude Code — el .mcp.json activa el servidor automáticamente
 claude .
 ```
+
+> No requiere API key propia. El servidor prepara el contexto y Claude Code lo ejecuta con la cuenta de cada usuario.
 
 **Herramientas disponibles:**
 
