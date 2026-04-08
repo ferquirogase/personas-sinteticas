@@ -89,9 +89,39 @@ El panel está actualmente alimentado con:
 
 ---
 
-## Dos formas de usar este repositorio
+## Tres formas de usar este repositorio
 
-### Opción A — Claude Code (recomendada)
+### Opción A — Servidor MCP (recomendada para el equipo)
+
+El servidor MCP expone las personas como herramientas disponibles en cualquier cliente compatible: Claude Code, Cursor, y otros. Una vez configurado, cualquier miembro del equipo puede consultarlo sin abrir el repo.
+
+```bash
+# 1. Clonar el repo
+git clone github.com/ferquirogase/personas-sinteticas
+cd personas-sinteticas
+
+# 2. Instalar dependencias
+pip install -r mcp_server/requirements.txt
+
+# 3. Configurar la API key de Anthropic
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# 4. Abrir en Claude Code — el .mcp.json activa el servidor automáticamente
+claude .
+```
+
+**Herramientas disponibles una vez instalado:**
+
+| Herramienta | Para qué sirve |
+|---|---|
+| `ask_panel` | El panel completo responde — el orquestador elige las personas relevantes |
+| `ask_persona` | Una persona específica responde (martin, laura, carlos, ana, diego, valentina) |
+| `user_audit` | Auditoría estructurada de una feature o copy — reacción, fricción, veredicto |
+| `detect_gap` | Detecta si una consulta implica un segmento no cubierto por el panel |
+
+Los datos se leen en tiempo real en cada consulta. Agregar datos nuevos al repo no requiere reiniciar nada.
+
+### Opción B — Claude Code (sin configuración)
 
 1. Abrir la carpeta `usuarios-sinteticos/` en Claude Code
 2. Escribir la consulta directamente — el sistema responde desde las personas relevantes
@@ -99,7 +129,7 @@ El panel está actualmente alimentado con:
 
 El archivo `CLAUDE.md` configura el comportamiento del orquestador automáticamente.
 
-### Opción B — Claude Projects (sin instalación)
+### Opción C — Claude Projects (sin instalación)
 
 1. Crear un nuevo Project en Claude → `Projects → New Project`
 2. Copiar el contenido de `INSTRUCCIONES_CLAUDE.md` en el campo *Project instructions*
@@ -168,6 +198,12 @@ consultas/
 
 decisiones/
   _FORMATO_DECISION.md    ← formato para registrar decisiones tomadas con el panel
+
+mcp_server/
+  server.py               ← servidor MCP con las 4 herramientas del panel
+  requirements.txt        ← dependencias Python
+
+.mcp.json                 ← configura el servidor MCP en Claude Code automáticamente
 ```
 
 ---
