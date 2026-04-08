@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "saldoar-personas": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["mcp_server/server.py"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
+      }
+    }
+  }
+}
