@@ -18,6 +18,7 @@ from pathlib import Path
 
 import anthropic
 from mcp.server.fastmcp import FastMCP
+from vector_store import retrieve_relevant_data, build_index
 
 # ─── Configuración ────────────────────────────────────────────────────────────
 
@@ -62,20 +63,12 @@ def _load_all_personas() -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _load_all_datos() -> str:
-    """Carga todos los archivos de datos en un string consolidado."""
-    parts = []
-    for subdir in ["nps", "soporte", "entrevistas"]:
-        data_dir = DATOS_DIR / subdir
-        if not data_dir.exists():
-            continue
-        for filename in sorted(data_dir.glob("*.md")):
-            if filename.name.startswith("_"):
-                continue
-            content = _read_file(filename)
-            if content:
-                parts.append(f"### datos/{subdir}/{filename.name}\n\n{content}")
-    return "\n\n---\n\n".join(parts) if parts else ""
+def _get_datos_for_query(query: str) -> str:
+    """
+    Recupera los fragmentos de datos más relevantes semánticamente para la consulta.
+    Reemplaza la carga completa de todos los datos — escala sin degradar calidad.
+    """
+    return retrieve_relevant_data(query, n_results=10)
 
 
 def _load_persona(name: str) -> str:
@@ -173,7 +166,7 @@ def ask_panel(pregunta: str) -> str:
     Returns:
         Respuestas en primera persona desde las personas relevantes del panel.
     """
-    datos = _load_all_datos()
+    datos = _get_datos_for_query(pregunta)
     system = _build_panel_system_prompt(datos)
 
     message = client.messages.create(
@@ -214,7 +207,7 @@ def ask_persona(nombre: str, pregunta: str) -> str:
     if not persona_content:
         return f"No se pudo cargar el perfil de '{nombre}'."
 
-    datos = _load_all_datos()
+    datos = _get_datos_for_query(pregunta)
     system = _build_persona_system_prompt(nombre_lower, persona_content, datos)
 
     message = client.messages.create(
@@ -247,7 +240,7 @@ def user_audit(feature_o_copy: str) -> str:
     Returns:
         Auditoría estructurada con la perspectiva de cada persona.
     """
-    datos = _load_all_datos()
+    datos = _get_datos_for_query(feature_o_copy)
     personas = _load_all_personas()
     panel_prompt = _load_panel_prompt()
 
@@ -369,7 +362,30 @@ Sé directo. Si hay cobertura parcial, decilo.
     return "No se pudo completar el análisis."
 
 
+@mcp.tool()
+def rebuild_index() -> str:
+    """
+    Fuerza la reconstrucción del índice de búsqueda semántica.
+
+    Llamar después de agregar archivos nuevos en /datos/ si el servidor
+    ya estaba corriendo. En condiciones normales el servidor detecta
+    cambios automáticamente al reiniciarse.
+
+    Returns:
+        Confirmación con la cantidad de chunks indexados.
+    """
+    from vector_store import build_index, invalidate_cache
+    invalidate_cache()
+    collection = build_index(force=True)
+    total = collection.count()
+    return f"Índice reconstruido. {total} fragmentos indexados y listos para búsqueda semántica."
+
+
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # Pre-cargar el índice al arrancar el servidor (evita latencia en la primera consulta)
+    print("[saldoar-personas] Inicializando índice de búsqueda semántica...")
+    build_index()
+    print("[saldoar-personas] Servidor listo.")
     mcp.run()

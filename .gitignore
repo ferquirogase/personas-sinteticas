@@ -6,6 +6,9 @@ __pycache__/
 .venv/
 venv/
 
+# Vector store — se genera localmente, no se commitea
+mcp_server/chroma_db/
+
 # Datos reales — no subir al repo público
 # Descomentar las líneas que correspondan según el nivel de privacidad deseado
 
