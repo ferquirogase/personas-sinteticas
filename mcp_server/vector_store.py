@@ -11,6 +11,7 @@ Primera ejecución: descarga el modelo de embeddings (~90MB, una sola vez).
 import hashlib
 import json
 import re
+import threading
 from pathlib import Path
 
 import chromadb
@@ -232,3 +233,33 @@ def invalidate_cache():
     _collection_cache = None
     if HASH_FILE.exists():
         HASH_FILE.unlink()
+
+
+def start_watcher():
+    """
+    Lanza un hilo en background que observa /datos/ y reconstruye el índice
+    automáticamente cuando detecta cambios (git pull, archivos nuevos, ediciones).
+
+    Llamar una sola vez al arrancar el servidor.
+    """
+    def _watch():
+        try:
+            from watchfiles import watch
+        except ImportError:
+            print("[vector_store] watchfiles no disponible — watcher desactivado.")
+            return
+
+        print(f"[vector_store] Observando cambios en {DATOS_DIR}")
+        for changes in watch(str(DATOS_DIR)):
+            relevant = [
+                path for _, path in changes
+                if path.endswith(".md") and not Path(path).name.startswith("_")
+            ]
+            if relevant:
+                print(f"[vector_store] Cambio detectado en {len(relevant)} archivo(s) — reconstruyendo índice...")
+                invalidate_cache()
+                collection = build_index()
+                print(f"[vector_store] Índice actualizado: {collection.count()} chunks.")
+
+    thread = threading.Thread(target=_watch, daemon=True, name="datos-watcher")
+    thread.start()

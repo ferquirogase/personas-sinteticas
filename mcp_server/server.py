@@ -18,7 +18,7 @@ from pathlib import Path
 
 import anthropic
 from mcp.server.fastmcp import FastMCP
-from vector_store import retrieve_relevant_data, build_index
+from vector_store import retrieve_relevant_data, build_index, start_watcher
 
 # ─── Configuración ────────────────────────────────────────────────────────────
 
@@ -384,8 +384,8 @@ def rebuild_index() -> str:
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    # Pre-cargar el índice al arrancar el servidor (evita latencia en la primera consulta)
     print("[saldoar-personas] Inicializando índice de búsqueda semántica...")
     build_index()
+    start_watcher()
     print("[saldoar-personas] Servidor listo.")
     mcp.run()
