@@ -15,7 +15,7 @@ import threading
 from pathlib import Path
 
 import chromadb
-from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
+from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 
@@ -23,6 +23,7 @@ DATOS_DIR = Path(__file__).parent.parent / "datos"
 CHROMA_DIR = Path(__file__).parent / "chroma_db"
 HASH_FILE = CHROMA_DIR / "data_hash.json"
 COLLECTION_NAME = "saldoar_datos"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
 
 # ─── Chunking ─────────────────────────────────────────────────────────────────
@@ -137,7 +138,7 @@ def build_index(force: bool = False) -> chromadb.Collection:
     files = _load_all_data_files()
     current_hash = _compute_data_hash(files)
 
-    embed_fn = DefaultEmbeddingFunction()
+    embed_fn = SentenceTransformerEmbeddingFunction(model_name=EMBEDDING_MODEL)
     client = _get_client()
 
     if not force and _index_is_fresh(current_hash):

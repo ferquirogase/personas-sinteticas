@@ -1,3 +1,0 @@
-mcp[cli]>=1.0.0
-chromadb[default]>=1.0.0
-watchfiles>=0.20.0

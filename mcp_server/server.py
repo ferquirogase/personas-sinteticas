@@ -14,7 +14,6 @@ Herramientas disponibles:
   rebuild_index — Fuerza reindexación del vector store
 """
 
-import os
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -307,6 +306,5 @@ if __name__ == "__main__":
     print("[saldoar-personas] Inicializando índice de búsqueda semántica...")
     build_index()
     start_watcher()
-    port = int(os.environ.get("PORT", 8000))
-    print(f"[saldoar-personas] Servidor listo en puerto {port}.")
-    mcp.run(transport="sse", host="0.0.0.0", port=port)
+    print("[saldoar-personas] Servidor listo. No requiere API key propia.")
+    mcp.run()
