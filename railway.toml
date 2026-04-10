@@ -3,6 +3,5 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "python mcp_server/server.py"
-healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
